@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countly App</title>
+  <style>
+    :root {
+      --bg: #121214;
+      --card: #1a1a1e;
+      --accent: #00b4d8;
+      --text: #ffffff;
+      --muted: #a0a0ab;
+      --alert: #f25c54;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 16px;
+    }
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .screen {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+    h1, h2, h3 {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0 16px 0;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #222;
+      color: #fff;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    button {
+      background: var(--accent);
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .item-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      border-left: 4px solid var(--accent);
+    }
+    .item-pic {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      background: #222;
+    }
+    .flex-space {
+      display: flex;
+      justify-content: space-between;
+      margin: 6px 0;
+    }
+    .badge-alert {
+      color: var(--alert);
+      font-weight: bold;
+    }
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .nav-tabs button {
+      margin: 0;
+      padding: 8px;
+      font-size: 14px;
+      background: #2a2a30;
+    }
+    .nav-tabs button.active-tab {
+      background: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- SCREEN 1: LOGIN -->
+  <div id="login-screen" class="screen active">
+    <h1>COUNTLY</h1>
+    <label>ENTER SECURITY CODE</label>
+    <input type="password" id="pass-input" placeholder="******">
+    <button onclick="checkPass()">ACCESS ACCOUNT</button>
+    <p id="login-error" style="color:var(--alert); text-align:center;"></p>
+  </div>
+
+  <!-- SCREEN 2: MAIN APP -->
+  <div id="main-screen" class="screen">
+    <h2>COUNTLY</h2>
+    
+    <div class="nav-tabs">
+      <button id="tab-view" class="active-tab" onclick="switchView('view')">STOCKS</button>
+      <button id="tab-add" onclick="switchView('add')">UPDATE</button>
+      <button id="tab-stats" onclick="switchView('stats')">ALERTS</button>
+    </div>
+
+    <!-- VIEW & SEARCH STOCKS -->
+    <div id="sub-view">
+      <input type="text" id="search-input" oninput="drawList()" placeholder="Search item name...">
+      <div id="items-container">LOADING STOCKS...</div>
+    </div>
+
+    <!-- UPDATE / ADD STOCK DATA -->
+    <div id="sub-add" class="screen">
+      <h3>UPDATE ITEM DATA</h3>
+      <label>Product Name</label>
+      <input type="text" id="form-name">
+      <label>Current Stock Count</label>
+      <input type="number" id="form-stock">
+      <label>Retail Sale Price</label>
+      <input type="text" id="form-retail">
+      <label>Wholesale Sale Price</label>
+      <input type="text" id="form-wholesale">
+      <label>Items Sold Count</label>
+      <input type="number" id="form-sold" value="0">
+      <label>Photo URL Link</label>
+      <input type="text" id="form-pic" placeholder="https://...">
+      <button onclick="saveItemData()">SAVE TO SPREADSHEET</button>
+    </div>
+
+    <!-- ALERTS & STATS -->
+    <div id="sub-stats" class="screen">
+      <h3>STOCK METRICS</h3>
+      <h4>OUT OF STOCK / LOW</h4>
+      <div id="alert-container"></div>
+      <hr style="border-color:#333; margin:20px 0;">
+      <h4>TOP SALES ITEMS</h4>
+      <div id="top-container"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // YOUR CONFIGURATION DATA
+  const SPREADSHEET_ID = "YOUR_SPREADSHEET_ID"; 
+  let localData = [];
+
+  function checkPass() {
+    const code = document.getElementById("pass-input").value;
+    if(code === "965610") {
+      document.getElementById("login-screen").classList.remove("active");
+      document.getElementById("main-screen").classList.add("active");
+      fetchSheetData();
+    } else {
+      document.getElementById("login-error").innerText = "ACCESS DENIED";
+    }
+  }
+
+  function switchView(target) {
+    document.getElementById("sub-view").style.display = target === 'view' ? 'block' : 'none';
+    document.getElementById("sub-add").style.display = target === 'add' ? 'block' : 'none';
+    document.getElementById("sub-stats").style.display = target === 'stats' ? 'block' : 'none';
+    
+    document.getElementById("tab-view").className = target === 'view' ? 'active-tab' : '';
+    document.getElementById("tab-add").className = target === 'add' ? 'active-tab' : '';
+    document.getElementById("tab-stats").className = target === 'stats' ? 'active-tab' : '';
+  }
+
+  async function fetchSheetData() {
+    try {
+      const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json`;
+      const res = await fetch(url);
+      const text = await res.text();
+      // Clean up Google structural json wrapper
+      const json = JSON.parse(text.substr(47).slice(0, -2));
+      const rows = json.table.rows;
+      
+      localData = rows.map(r => ({
+        item: r.c[0] ? r.c[0].v : "",
+        stock: r.c[1] ? Number(r.c[1].v) : 0,
+        retail: r.c[2] ? r.c[2].v : "0",
+        wholesale: r.c[3] ? r.c[3].v : "0",
+        sold: r.c[4] ? Number(r.c[4].v) : 0,
+        photo: r.c[5] ? r.c[5].v : ""
+      }));
+      
+      drawList();
+      drawStats();
+    } catch(err) {
+      document.getElementById("items-container").innerText = "ERROR LOADING DATA. CHECK SPREADSHEET ID.";
+    }
+  }
+
+  function drawList() {
+    const term = document.getElementById("search-input").value.toLowerCase();
+    const container = document.getElementById("items-container");
+    container.innerHTML = "";
+    
+    // Fuzzy search: Filter any names containing our search term
+    const filtered = localData.filter(d => d.item.toLowerCase().includes(term));
+    
+    if(filtered.length === 0) {
+      container.innerHTML = "<p style='text-align:center; color:var(--muted);'>No matching items items discovered.</p>";
+      return;
+    }
+
+    filtered.forEach(d => {
+      const card = document.createElement("div");
+      card.className = "item-card";
+      
+      let imgTag = d.photo ? `<img src="${d.photo}" class="item-pic" alt="pic">` : `<div class="item-pic" style="display:flex; align-items:center; justify-content:center; color:var(--muted);">NO IMAGE</div>`;
+      let stockAlertStatus = d.stock <= 0 ? "<span class='badge-alert'>SOLD OUT</span>" : d.stock <= 5 ? "<span class='badge-alert'>LOW</span>" : "OK";
+
+      card.innerHTML = `
+        ${imgTag}
+        <div class="flex-space"><strong>${d.item}</strong> <span>${stockAlertStatus}</span></div>
+        <div class="flex-space"><span style="color:var(--muted)">Stock Count:</span> <strong>${d.stock}</strong></div>
+        <div class="flex-space"><span style="color:var(--muted)">Retail Rate:</span> <span>${d.retail}</span></div>
+        <div class="flex-space"><span style="color:var(--muted)">Wholesale Rate:</span> <span>${d.wholesale}</span></div>
+        <div class="flex-space"><span style="color:var(--muted)">Total Sold:</span> <span>${d.sold}</span></div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function drawStats() {
+    const alertBox = document.getElementById("alert-container");
+    const topBox = document.getElementById("top-container");
+    
+    alertBox.innerHTML = "";
+    topBox.innerHTML = "";
+
+    // 1. Filter low stocks or sold out items
+    const lowStockItems = localData.filter(d => d.stock <= 5);
+    if(lowStockItems.length === 0) {
+      alertBox.innerHTML = "<p style='color:var(--muted);'>All items secure in stock.</p>";
+    } else {
+      lowStockItems.forEach(d => {
+        alertBox.innerHTML += `<div class="flex-space" style="padding:4px 0;"><span>${d.item}</span> <span class="badge-alert">${d.stock} left</span></div>`;
+      });
+    }
+
+    // 2. Sort out most sold products
+    const sortedData = [...localData].sort((x, y) => y.sold - x.sold);
+    const topThree = sortedData.slice(0, 3);
+    
+    topThree.forEach((d, idx) => {
+      if(d.sold > 0) {
+        topBox.innerHTML += `<div class="flex-space" style="padding:4px 0;"><span>${idx+1}. ${d.item}</span> <strong>${d.sold} units sold</strong></div>`;
+      }
+    });
+    if(topBox.innerHTML === "") {
+      topBox.innerHTML = "<p style='color:var(--muted);'>No sales recorded yet.</p>";
+    }
+  }
+
+  function saveItemData() {
+    // Instructions alert to link back up to Google Forms/Sheets updates
+    alert("To overwrite spreadsheet data instantly from a custom web UI for free, link this client form block to a standard Google Form submit URL action!");
+  }
+</script>
+
+</body>
+</html>
