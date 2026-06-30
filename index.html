@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Countly Premium</title>
+  <title>Countly Premium Business</title>
   <style>
     :root {
       --bg: #0f0f11;
@@ -29,7 +29,7 @@
       box-sizing: border-box;
     }
     
-    /* LOGIN BACKGROUND DESIGN */
+    /* LOGIN BACKGROUND */
     .login-bg {
       background: linear-gradient(135deg, #1e1e24 0%, #0f0f11 100%);
       display: flex;
@@ -103,19 +103,21 @@
       transform: scale(0.98);
     }
     
-    /* NAV TABS */
+    /* NEW 3-TAB SYSTEM */
     .nav-tabs {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 20px;
     }
     .nav-tabs button {
       margin: 0;
-      padding: 12px;
-      font-size: 14px;
+      padding: 12px 6px;
+      font-size: 12px;
+      font-weight: bold;
       background: #18181c;
       color: var(--text-sub);
       border: 1px solid #252529;
+      text-transform: uppercase;
     }
     .nav-tabs button.active-tab {
       background: linear-gradient(90deg, #00b4d8, #00f5d4);
@@ -123,7 +125,7 @@
       border: none;
     }
 
-    /* STOCK STATUS SUMMARY BOX */
+    /* SUMMARY COUNTER */
     .status-summary-box {
       background: linear-gradient(135deg, #1f1f26 0%, #141419 100%);
       border-radius: 14px;
@@ -140,7 +142,6 @@
       padding: 18px;
       margin-bottom: 16px;
       border: 1px solid #23232a;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     .item-pic {
       width: 100%;
@@ -170,7 +171,6 @@
       border: 1px solid #2c2c35;
     }
     
-    /* BALANCE SHEET DESIGN */
     .balance-box {
       background: linear-gradient(135deg, #1d3557 0%, #18181c 100%);
       border-radius: 14px;
@@ -187,11 +187,10 @@
 
 <div class="container">
 
-  <!-- SCREEN 1: LOGIN -->
   <div id="login-screen" class="screen active login-bg">
     <div class="login-card">
       <h1>COUNTLY</h1>
-      <p style="color: var(--text-sub); font-size:14px; margin-top:0; margin-bottom:25px;">INVENTORY DASHBOARD</p>
+      <p style="color: var(--text-sub); font-size:14px; margin-top:0; margin-bottom:25px;">BUSINESS MANAGER</p>
       <label>Enter Security Code</label>
       <input type="password" id="pass-input" placeholder="••••••" style="text-align: center; font-size: 20px; letter-spacing: 4px;" onkeydown="loginEnter(event)">
       <button onclick="checkPass()">ACCESS ACCOUNT</button>
@@ -199,65 +198,60 @@
     </div>
   </div>
 
-  <!-- SCREEN 2: MAIN APP -->
   <div id="main-screen" class="screen app-padding">
-    <h2 style="text-align: center; letter-spacing: 2px; color: var(--accent);">COUNTLY</h2>
+    <h2 style="text-align: center; letter-spacing: 2px; color: var(--accent); margin-bottom: 15px;">COUNTLY</h2>
     
     <div class="nav-tabs">
-      <button id="tab-view" class="active-tab" onclick="switchView('view')">STOCKS</button>
-      <button id="tab-add" onclick="switchView('add')">UPDATE</button>
-      <button id="tab-stats" onclick="switchView('stats')">METRICS</button>
+      <button id="tab-add" class="active-tab" onclick="switchView('add')">📥 Add Goods</button>
+      <button id="tab-view" onclick="switchView('view')">🔍 View & Prices</button>
+      <button id="tab-stats" onclick="switchView('stats')">📊 Stock Level</button>
     </div>
 
-    <!-- VIEW & SEARCH STOCKS -->
-    <div id="sub-view">
-      <!-- NEW CURRENT STOCK TOTAL BOX -->
-      <div class="status-summary-box">
-        <span style="color: var(--text-sub); font-size: 14px;">📦 TOTAL ITEMS IN STOCK</span>
-        <h2 style="color: var(--accent); margin: 5px 0 0 0; font-size: 28px;" id="total-stock-count">0</h2>
-      </div>
-
-      <input type="text" id="search-input" oninput="drawList()" placeholder="🔍 Type item name to search...">
-      <div id="items-container">LOADING SECURE DATA...</div>
-    </div>
-
-    <!-- UPDATE / ADD DATA -->
-    <div id="sub-add" class="screen">
-      <h3 style="color: var(--accent); border-bottom: 1px solid #222; padding-bottom: 10px;">UPDATE ITEM</h3>
+    <div id="sub-add" class="screen active">
+      <h3 style="color: var(--accent); border-bottom: 1px solid #222; padding-bottom: 10px;">📥 ADD NEW GOODS</h3>
       
       <label>Product Name</label>
       <input type="text" id="form-name" placeholder="Item Name" onkeydown="nextBox(event, 'form-stock')">
       
-      <label>Current Stock Count</label>
+      <label>Stock Count (എണ്ണം)</label>
       <input type="number" id="form-stock" placeholder="0" onkeydown="nextBox(event, 'form-retail')">
       
-      <label>Retail Sale Price</label>
+      <label>Retail Sale Price (വില)</label>
       <input type="text" id="form-retail" placeholder="0.00" onkeydown="nextBox(event, 'form-wholesale')">
       
       <label>Wholesale Sale Price</label>
       <input type="text" id="form-wholesale" placeholder="0.00" onkeydown="nextBox(event, 'form-sold')">
       
-      <label>Items Sold Count</label>
+      <label>Items Sold (ഇതുവരെ വിറ്റത്)</label>
       <input type="number" id="form-sold" placeholder="0" onkeydown="nextBox(event, 'form-sales')">
 
-      <label>Sales Amount / Revenue</label>
+      <label>Sales Revenue (കിട്ടിയ പണം)</label>
       <input type="text" id="form-sales" placeholder="0.00" onkeydown="nextBox(event, 'form-pic')">
       
-      <label>Photo URL Link</label>
+      <label>Photo URL Link (Optional)</label>
       <input type="text" id="form-pic" placeholder="https://..." onkeydown="nextBox(event, 'submit-btn')">
       
       <button id="submit-btn" onclick="saveItemData()">SAVE TO SPREADSHEET</button>
       <p id="status-msg" style="text-align:center; font-weight:bold;"></p>
     </div>
 
-    <!-- METRICS & BALANCE SHEET -->
+    <div id="sub-view" class="screen">
+      <h3 style="color: var(--accent);">🔍 GOODS LIST & PRICES</h3>
+      <input type="text" id="search-input" oninput="drawList()" placeholder="🔍 Type product name to check...">
+      <div id="items-container">LOADING SECURE DATA...</div>
+    </div>
+
     <div id="sub-stats" class="screen">
+      <h3 style="color: var(--accent);">📊 OVERALL STOCK STATUS</h3>
       
-      <!-- BALANCE SHEET BLOCK -->
-      <h3 style="color: var(--accent);">📊 BALANCE SHEET</h3>
+      <div class="status-summary-box">
+        <span style="color: var(--text-sub); font-size: 14px;">📦 TOTAL UNITS IN STOCK</span>
+        <h2 style="color: var(--accent); margin: 5px 0 0 0; font-size: 32px;" id="total-stock-count">0</h2>
+      </div>
+
       <div class="balance-box">
         <div class="flex-space">
-          <span style="color:var(--text-sub);">Total Stock Value:</span>
+          <span style="color:var(--text-sub);">Total Stock Net Value:</span>
           <strong style="color:var(--gold); font-size:18px;" id="total-stock-val">₹0.00</strong>
         </div>
         <div class="flex-space">
@@ -266,10 +260,10 @@
         </div>
       </div>
 
-      <h3 style="color: var(--alert);">⚠️ STOCK ALERTS</h3>
+      <h3 style="color: var(--alert);">⚠️ LOW STOCK ALERTS</h3>
       <div id="alert-container" class="item-card"></div>
       
-      <h3 style="color: var(--success);">🏆 TOP PERFORMERS</h3>
+      <h3 style="color: var(--success);">🏆 TOP SELLING</h3>
       <div id="top-container" class="item-card"></div>
     </div>
 
@@ -278,7 +272,6 @@
 </div>
 
 <script>
-  // INSERT DETAILS HERE
   const SPREADSHEET_ID = "YOUR_SPREADSHEET_ID"; 
   const WEB_APP_URL = "YOUR_WEB_APP_URL"; 
 
@@ -337,21 +330,16 @@
         photo: r.c[6] ? r.c[6].v : ""
       }));
       
-      calculateTotalStock();
+      // Update counts across screens
+      let grandStock = 0;
+      localData.forEach(d => { grandStock += d.stock; });
+      document.getElementById("total-stock-count").innerText = grandStock;
+
       drawList();
       drawStats();
     } catch(err) {
       document.getElementById("items-container").innerText = "Error refreshing database.";
     }
-  }
-
-  // FUNCTION TO CALCULATE TOTAL STOCK FOR THE NEW BOX
-  function calculateTotalStock() {
-    let grandStock = 0;
-    localData.forEach(d => {
-      grandStock += d.stock;
-    });
-    document.getElementById("total-stock-count").innerText = grandStock;
   }
 
   function drawList() {
@@ -371,18 +359,17 @@
       card.className = "item-card";
       
       let imgTag = d.photo && d.photo !== "NO IMAGE" ? `<img src="${d.photo}" class="item-pic" alt="pic">` : "";
-      let stockAlertStatus = d.stock <= 0 ? "<span class='badge-alert'>SOLD OUT</span>" : d.stock <= 5 ? "<span class='badge-alert'>LOW STOCK</span>" : "<span class='badge-ok'>AVAILABLE</span>";
+      let stockAlertStatus = d.stock <= 0 ? "<span class='badge-alert'>SOLD OUT</span>" : d.stock <= 5 ? "<span class='badge-alert'>LOW STOCK</span>" : "<span class='badge-ok'>IN STOCK</span>";
 
       card.innerHTML = `
         ${imgTag}
-        <div class="flex-space"><strong style="font-size:18px;">${d.item}</strong> <span>${stockAlertStatus}</span></div>
+        <div class="flex-space"><strong style="font-size:18px; color:var(--accent);">${d.item}</strong> <span>${stockAlertStatus}</span></div>
         <div class="price-container">
-          <div class="price-tag"><span style="color:var(--text-sub)">Retail</span><br><strong style="color:var(--accent)">₹${d.retail}</strong></div>
-          <div class="price-tag"><span style="color:var(--text-sub)">Wholesale</span><br><strong style="color:var(--gold)">₹${d.wholesale}</strong></div>
+          <div class="price-tag"><span style="color:var(--text-sub)">Retail Price</span><br><strong style="color:var(--text-main)">₹${d.retail}</strong></div>
+          <div class="price-tag"><span style="color:var(--text-sub)">Wholesale Price</span><br><strong style="color:var(--gold)">₹${d.wholesale}</strong></div>
         </div>
-        <div class="flex-space"><span style="color:var(--text-sub)">Remaining Stock:</span> <strong>${d.stock}</strong></div>
-        <div class="flex-space"><span style="color:var(--text-sub)">Units Sold:</span> <span>${d.sold}</span></div>
-        <div class="flex-space"><span style="color:var(--text-sub)">Item Revenue:</span> <span style="color:var(--success)">₹${d.sales}</span></div>
+        <div class="flex-space"><span style="color:var(--text-sub)">Remaining Balance Stock:</span> <strong style="font-size:16px;">${d.stock} units</strong></div>
+        <div class="flex-space"><span style="color:var(--text-sub)">Total Sold Volume:</span> <span>${d.sold}</span></div>
       `;
       container.appendChild(card);
     });
@@ -448,17 +435,9 @@
 
     const statusMsg = document.getElementById("status-msg");
     statusMsg.style.color = "var(--accent)";
-    statusMsg.innerText = "UPDATING DATABASE...";
+    statusMsg.innerText = "SAVING GOODS TO SPREADSHEET...";
 
-    const payload = {
-      item: pName,
-      stock: pStock,
-      retail: pRetail,
-      wholesale: pWholesale,
-      sold: pSold,
-      sales: pSales,
-      photo: pPic
-    };
+    const payload = { item: pName, stock: pStock, retail: pRetail, wholesale: pWholesale, sold: pSold, sales: pSales, photo: pPic };
 
     try {
       await fetch(WEB_APP_URL, {
@@ -470,7 +449,7 @@
       });
 
       statusMsg.style.color = "var(--success)";
-      statusMsg.innerText = "SUCCESSFULLY SAVED!";
+      statusMsg.innerText = "SUCCESSFULLY ADDED!";
       
       document.getElementById("form-name").value = "";
       document.getElementById("form-stock").value = "";
@@ -481,10 +460,9 @@
       document.getElementById("form-pic").value = "";
 
       await fetchSheetData();
-
     } catch (error) {
       statusMsg.style.color = "var(--alert)";
-      statusMsg.innerText = "SUBMIT ERROR. RETRY.";
+      statusMsg.innerText = "ERROR SAVING. TRY AGAIN.";
     }
   }
 </script>
