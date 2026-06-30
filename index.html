@@ -103,7 +103,7 @@
       transform: scale(0.98);
     }
     
-    /* NEW 3-TAB SYSTEM */
+    /* 3-TAB SYSTEM */
     .nav-tabs {
       display: flex;
       gap: 8px;
@@ -213,7 +213,7 @@
       <label>Product Name</label>
       <input type="text" id="form-name" placeholder="Item Name" onkeydown="nextBox(event, 'form-stock')">
       
-      <label>Stock Count (എണ്ണം)</label>
+      <label>Stock Count (ആകെ എണ്ണം)</label>
       <input type="number" id="form-stock" placeholder="0" onkeydown="nextBox(event, 'form-retail')">
       
       <label>Retail Sale Price (വില)</label>
@@ -272,6 +272,7 @@
 </div>
 
 <script>
+  // ശ്രദ്ധിക്കുക: ഇവിടെ നിങ്ങളുടെ സ്വന്തം ID-കൾ നൽകാൻ മറക്കരുത്!
   const SPREADSHEET_ID = "YOUR_SPREADSHEET_ID"; 
   const WEB_APP_URL = "YOUR_WEB_APP_URL"; 
 
@@ -309,6 +310,7 @@
     document.getElementById("tab-add").className = target === 'add' ? 'active-tab' : '';
     document.getElementById("tab-stats").className = target === 'stats' ? 'active-tab' : '';
     
+    // Background-ൽ ഷീറ്റിൽ നിന്ന് ലേറ്റസ്റ്റ് വിവരങ്ങൾ എടുത്തുകൊണ്ടിരിക്കും
     fetchSheetData();
   }
 
@@ -320,26 +322,31 @@
       const json = JSON.parse(text.substr(47).slice(0, -2));
       const rows = json.table.rows;
       
-      localData = rows.map(r => ({
-        item: r.c[0] ? r.c[0].v : "Unnamed Item",
-        stock: r.c[1] ? Number(r.c[1].v) : 0,
-        retail: r.c[2] ? r.c[2].v : "0",
-        wholesale: r.c[3] ? r.c[3].v : "0",
-        sold: r.c[4] ? Number(r.c[4].v) : 0,
-        sales: r.c[5] ? r.c[5].v : "0",
-        photo: r.c[6] ? r.c[6].v : ""
-      }));
+      // ഗൂഗിൾ ഷീറ്റിൽ ഒരുപക്ഷേ ബ്ലാങ്ക് വരികൾ ഉണ്ടെങ്കിൽ അത് ഒഴിവാക്കി ഡാറ്റ എടുക്കുന്നു
+      localData = rows
+        .map(r => ({
+          item: r.c[0] ? r.c[0].v : "",
+          stock: r.c[1] ? Number(r.c[1].v) : 0,
+          retail: r.c[2] ? r.c[2].v : "0",
+          wholesale: r.c[3] ? r.c[3].v : "0",
+          sold: r.c[4] ? Number(r.c[4].v) : 0,
+          sales: r.c[5] ? r.c[5].v : "0",
+          photo: r.c[6] ? r.c[6].v : ""
+        }))
+        .filter(d => d.item !== ""); // പേര് ഇല്ലാത്ത വരികൾ ലിസ്റ്റിൽ കാണിക്കില്ല
       
-      // Update counts across screens
-      let grandStock = 0;
-      localData.forEach(d => { grandStock += d.stock; });
-      document.getElementById("total-stock-count").innerText = grandStock;
-
+      updateSummaryCounts();
       drawList();
       drawStats();
     } catch(err) {
-      document.getElementById("items-container").innerText = "Error refreshing database.";
+      console.log("Database fetch skip/error, using local state.");
     }
+  }
+
+  function updateSummaryCounts() {
+    let grandStock = 0;
+    localData.forEach(d => { grandStock += d.stock; });
+    document.getElementById("total-stock-count").innerText = grandStock;
   }
 
   function drawList() {
@@ -378,6 +385,8 @@
   function drawStats() {
     const alertBox = document.getElementById("alert-container");
     const topBox = document.getElementById("top-container");
+    
+    if(!alertBox || !topBox) return;
     
     alertBox.innerHTML = "";
     topBox.innerHTML = "";
@@ -420,7 +429,7 @@
   }
 
   async function saveItemData() {
-    const pName = document.getElementById("form-name").value;
+    const pName = document.getElementById("form-name").value.trim();
     const pStock = document.getElementById("form-stock").value || "0";
     const pRetail = document.getElementById("form-retail").value || "0.00";
     const pWholesale = document.getElementById("form-wholesale").value || "0.00";
@@ -437,7 +446,20 @@
     statusMsg.style.color = "var(--accent)";
     statusMsg.innerText = "SAVING GOODS TO SPREADSHEET...";
 
-    const payload = { item: pName, stock: pStock, retail: pRetail, wholesale: pWholesale, sold: pSold, sales: pSales, photo: pPic };
+    const newItem = { 
+      item: pName, 
+      stock: Number(pStock), 
+      retail: pRetail, 
+      wholesale: pWholesale, 
+      sold: Number(pSold), 
+      sales: pSales, 
+      photo: pPic 
+    };
+
+    // INSTANT LOCAL UPDATE: ഷീറ്റിലേക്ക് പോകുന്നതിനൊപ്പം ആപ്പിലെ ലിസ്റ്റിലേക്ക് ഉടൻ ചേർക്കുന്നു
+    localData.push(newItem);
+    updateSummaryCounts();
+    drawList();
 
     try {
       await fetch(WEB_APP_URL, {
@@ -445,12 +467,13 @@
         mode: "no-cors",
         cache: "no-cache",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(newItem)
       });
 
       statusMsg.style.color = "var(--success)";
       statusMsg.innerText = "SUCCESSFULLY ADDED!";
       
+      // ഫോം ഫീൽഡുകൾ ക്ലിയർ ചെയ്യുന്നു
       document.getElementById("form-name").value = "";
       document.getElementById("form-stock").value = "";
       document.getElementById("form-retail").value = "";
@@ -459,10 +482,11 @@
       document.getElementById("form-sales").value = "";
       document.getElementById("form-pic").value = "";
 
+      // ഫൈനൽ സിങ്ക്
       await fetchSheetData();
     } catch (error) {
       statusMsg.style.color = "var(--alert)";
-      statusMsg.innerText = "ERROR SAVING. TRY AGAIN.";
+      statusMsg.innerText = "ERROR SAVING. DATA HELD LOCALLY.";
     }
   }
 </script>
