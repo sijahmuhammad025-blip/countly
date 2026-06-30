@@ -3,160 +3,258 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Countly App</title>
+  <title>Countly Premium</title>
   <style>
     :root {
-      --bg: #121214;
-      --card: #1a1a1e;
-      --accent: #00b4d8;
-      --text: #ffffff;
-      --muted: #a0a0ab;
-      --alert: #f25c54;
+      --bg: #0f0f11;
+      --card: #18181c;
+      --accent: #00f5d4;
+      --text-main: #f1f3f5;
+      --text-sub: #adb5bd;
+      --alert: #ff5a5f;
+      --success: #38b000;
+      --gold: #fee440;
     }
     body {
       background: var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, sans-serif;
+      color: var(--text-main);
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       margin: 0;
-      padding: 16px;
+      padding: 0;
     }
     .container {
       max-width: 480px;
       margin: 0 auto;
+      min-height: 100vh;
+      box-sizing: border-box;
     }
-    .screen {
-      display: none;
+    
+    /* LOGIN BACKGROUND DESIGN */
+    .login-bg {
+      background: linear-gradient(135deg, #1e1e24 0%, #0f0f11 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 30px;
+      min-height: 100vh;
+      box-sizing: border-box;
     }
-    .active {
-      display: block;
-    }
-    h1, h2, h3 {
+    .login-card {
+      background: rgba(24, 24, 28, 0.8);
+      padding: 30px 24px;
+      border-radius: 16px;
+      border: 1px solid #2c2c35;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
       text-align: center;
-      margin-bottom: 24px;
     }
-    input, select, button {
+    .login-card h1 {
+      font-size: 32px;
+      letter-spacing: 3px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .screen { display: none; }
+    .active { display: block; }
+    
+    .app-padding {
+      padding: 20px 16px;
+    }
+    
+    h2, h3, h4 {
+      color: var(--text-main);
+      margin-top: 0;
+    }
+    label {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    input, button {
       width: 100%;
-      padding: 12px;
-      margin: 8px 0 16px 0;
-      border-radius: 8px;
-      border: 1px solid #333;
-      background: #222;
+      padding: 14px;
+      margin: 8px 0 18px 0;
+      border-radius: 10px;
+      border: 1px solid #2a2a32;
+      background: #1f1f24;
       color: #fff;
       box-sizing: border-box;
       font-size: 16px;
+      transition: all 0.3s;
+    }
+    input:focus {
+      border-color: var(--accent);
+      outline: none;
+      background: #25252b;
     }
     button {
-      background: var(--accent);
+      background: linear-gradient(90deg, #00b4d8, #00f5d4);
+      color: #0f0f11;
       border: none;
       font-weight: bold;
       cursor: pointer;
+      letter-spacing: 1px;
     }
+    button:active {
+      transform: scale(0.98);
+    }
+    
+    /* NAV TABS */
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .nav-tabs button {
+      margin: 0;
+      padding: 12px;
+      font-size: 14px;
+      background: #18181c;
+      color: var(--text-sub);
+      border: 1px solid #252529;
+    }
+    .nav-tabs button.active-tab {
+      background: linear-gradient(90deg, #00b4d8, #00f5d4);
+      color: #0f0f11;
+      border: none;
+    }
+
+    /* CARDS DESIGN */
     .item-card {
       background: var(--card);
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 14px;
+      padding: 18px;
       margin-bottom: 16px;
-      border-left: 4px solid var(--accent);
+      border: 1px solid #23232a;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     .item-pic {
       width: 100%;
-      max-height: 200px;
+      max-height: 180px;
       object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 12px;
+      border-radius: 10px;
+      margin-bottom: 14px;
       background: #222;
     }
     .flex-space {
       display: flex;
       justify-content: space-between;
-      margin: 6px 0;
+      align-items: center;
+      margin: 8px 0;
     }
-    .price-tag {
-      background: #252529;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-    .badge-alert {
-      color: var(--alert);
-      font-weight: bold;
-    }
-    .nav-tabs {
+    .price-container {
       display: flex;
       gap: 8px;
-      margin-bottom: 16px;
+      margin: 12px 0;
     }
-    .nav-tabs button {
-      margin: 0;
-      padding: 8px;
+    .price-tag {
+      flex: 1;
+      background: #202026;
+      padding: 8px 12px;
+      border-radius: 8px;
       font-size: 14px;
-      background: #2a2a30;
+      border: 1px solid #2c2c35;
     }
-    .nav-tabs button.active-tab {
-      background: var(--accent);
+    
+    /* BALANCE SHEET DESIGN */
+    .balance-box {
+      background: linear-gradient(135deg, #1d3557 0%, #18181c 100%);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 24px;
+      border: 1px solid #457b9d;
     }
+
+    .badge-alert { color: var(--alert); font-weight: bold; }
+    .badge-ok { color: var(--success); font-weight: bold; }
   </style>
 </head>
 <body>
 
 <div class="container">
 
-  <div id="login-screen" class="screen active">
-    <h1>COUNTLY</h1>
-    <label>ENTER SECURITY CODE</label>
-    <input type="password" id="pass-input" placeholder="******" onkeydown="loginEnter(event)">
-    <button onclick="checkPass()">ACCESS ACCOUNT</button>
-    <p id="login-error" style="color:var(--alert); text-align:center;"></p>
+  <!-- SCREEN 1: LOGIN (WITH ATTRACTIVE BACKGROUND) -->
+  <div id="login-screen" class="screen active login-bg">
+    <div class="login-card">
+      <h1>COUNTLY</h1>
+      <p style="color: var(--text-sub); font-size:14px; margin-top:0; margin-bottom:25px;">INVENTORY DASHBOARD</p>
+      <label>Enter Security Code</label>
+      <input type="password" id="pass-input" placeholder="••••••" style="text-align: center; font-size: 20px; letter-spacing: 4px;" onkeydown="loginEnter(event)">
+      <button onclick="checkPass()">ACCESS ACCOUNT</button>
+      <p id="login-error" style="color:var(--alert); font-weight:bold; margin-top:10px;"></p>
+    </div>
   </div>
 
-  <div id="main-screen" class="screen">
-    <h2>COUNTLY</h2>
+  <!-- SCREEN 2: MAIN APP -->
+  <div id="main-screen" class="screen app-padding">
+    <h2 style="text-align: center; letter-spacing: 2px; color: var(--accent);">COUNTLY</h2>
     
     <div class="nav-tabs">
       <button id="tab-view" class="active-tab" onclick="switchView('view')">STOCKS</button>
       <button id="tab-add" onclick="switchView('add')">UPDATE</button>
-      <button id="tab-stats" onclick="switchView('stats')">ALERTS</button>
+      <button id="tab-stats" onclick="switchView('stats')">METRICS</button>
     </div>
 
+    <!-- VIEW & SEARCH STOCKS -->
     <div id="sub-view">
-      <input type="text" id="search-input" oninput="drawList()" placeholder="Search item name...">
-      <div id="items-container">LOADING STOCKS...</div>
+      <input type="text" id="search-input" oninput="drawList()" placeholder="🔍 Type item name to search...">
+      <div id="items-container">LOADING SECURE DATA...</div>
     </div>
 
+    <!-- UPDATE / ADD DATA -->
     <div id="sub-add" class="screen">
-      <h3>UPDATE ITEM DATA</h3>
+      <h3 style="color: var(--accent); border-bottom: 1px solid #222; padding-bottom: 10px;">UPDATE ITEM</h3>
       
       <label>Product Name</label>
-      <input type="text" id="form-name" onkeydown="nextBox(event, 'form-stock')">
+      <input type="text" id="form-name" placeholder="Item Name" onkeydown="nextBox(event, 'form-stock')">
       
-      <label>Current Stock Count (Optional)</label>
+      <label>Current Stock Count</label>
       <input type="number" id="form-stock" placeholder="0" onkeydown="nextBox(event, 'form-retail')">
       
-      <label>Retail Sale Price (Optional)</label>
+      <label>Retail Sale Price</label>
       <input type="text" id="form-retail" placeholder="0.00" onkeydown="nextBox(event, 'form-wholesale')">
       
-      <label>Wholesale Sale Price (Optional)</label>
+      <label>Wholesale Sale Price</label>
       <input type="text" id="form-wholesale" placeholder="0.00" onkeydown="nextBox(event, 'form-sold')">
       
-      <label>Items Sold Count (Optional)</label>
+      <label>Items Sold Count</label>
       <input type="number" id="form-sold" placeholder="0" onkeydown="nextBox(event, 'form-sales')">
 
-      <label>Sales Amount / Revenue (Optional)</label>
+      <label>Sales Amount / Revenue</label>
       <input type="text" id="form-sales" placeholder="0.00" onkeydown="nextBox(event, 'form-pic')">
       
-      <label>Photo URL Link (Optional)</label>
+      <label>Photo URL Link</label>
       <input type="text" id="form-pic" placeholder="https://..." onkeydown="nextBox(event, 'submit-btn')">
       
       <button id="submit-btn" onclick="saveItemData()">SAVE TO SPREADSHEET</button>
+      <p id="status-msg" style="text-align:center; font-weight:bold;"></p>
     </div>
 
+    <!-- METRICS & BALANCE SHEET -->
     <div id="sub-stats" class="screen">
-      <h3>STOCK METRICS</h3>
-      <h4>OUT OF STOCK / LOW</h4>
-      <div id="alert-container"></div>
-      <hr style="border-color:#333; margin:20px 0;">
-      <h4>TOP SALES ITEMS</h4>
-      <div id="top-container"></div>
+      
+      <!-- NEW BALANCE SHEET BLOCK -->
+      <h3 style="color: var(--accent);">📊 BALANCE SHEET</h3>
+      <div class="balance-box">
+        <div class="flex-space">
+          <span style="color:var(--text-sub);">Total Stock Value:</span>
+          <strong style="color:var(--gold); font-size:18px;" id="total-stock-val">₹0.00</strong>
+        </div>
+        <div class="flex-space">
+          <span style="color:var(--text-sub);">Total Sales Revenue:</span>
+          <strong style="color:var(--accent); font-size:18px;" id="total-sales-val">₹0.00</strong>
+        </div>
+      </div>
+
+      <h3 style="color: var(--alert);">⚠️ STOCK ALERTS</h3>
+      <div id="alert-container" class="item-card"></div>
+      
+      <h3 style="color: var(--success);">🏆 TOP PERFORMERS</h3>
+      <div id="top-container" class="item-card"></div>
     </div>
 
   </div>
@@ -164,23 +262,22 @@
 </div>
 
 <script>
+  // INSERT DETAILS HERE
   const SPREADSHEET_ID = "YOUR_SPREADSHEET_ID"; 
+  const WEB_APP_URL = "YOUR_WEB_APP_URL"; 
+
   let localData = [];
 
   function nextBox(event, nextId) {
     if (event.key === "Enter") {
       event.preventDefault();
       const target = document.getElementById(nextId);
-      if (target) {
-        target.focus();
-      }
+      if (target) target.focus();
     }
   }
 
   function loginEnter(event) {
-    if (event.key === "Enter") {
-      checkPass();
-    }
+    if (event.key === "Enter") checkPass();
   }
 
   function checkPass() {
@@ -190,7 +287,7 @@
       document.getElementById("main-screen").classList.add("active");
       fetchSheetData();
     } else {
-      document.getElementById("login-error").innerText = "ACCESS DENIED";
+      document.getElementById("login-error").innerText = "INVALID CODE. ACCESS DENIED.";
     }
   }
 
@@ -202,6 +299,9 @@
     document.getElementById("tab-view").className = target === 'view' ? 'active-tab' : '';
     document.getElementById("tab-add").className = target === 'add' ? 'active-tab' : '';
     document.getElementById("tab-stats").className = target === 'stats' ? 'active-tab' : '';
+    
+    // Always fetch latest data when checking view or stats
+    fetchSheetData();
   }
 
   async function fetchSheetData() {
@@ -213,7 +313,7 @@
       const rows = json.table.rows;
       
       localData = rows.map(r => ({
-        item: r.c[0] ? r.c[0].v : "",
+        item: r.c[0] ? r.c[0].v : "Unnamed Item",
         stock: r.c[1] ? Number(r.c[1].v) : 0,
         retail: r.c[2] ? r.c[2].v : "0",
         wholesale: r.c[3] ? r.c[3].v : "0",
@@ -225,7 +325,7 @@
       drawList();
       drawStats();
     } catch(err) {
-      document.getElementById("items-container").innerText = "ERROR LOADING DATA. CHECK SPREADSHEET ID.";
+      document.getElementById("items-container").innerText = "Error refreshing database.";
     }
   }
 
@@ -237,7 +337,7 @@
     const filtered = localData.filter(d => d.item.toLowerCase().includes(term));
     
     if(filtered.length === 0) {
-      container.innerHTML = "<p style='text-align:center; color:var(--muted);'>No matching items discovered.</p>";
+      container.innerHTML = "<p style='text-align:center; color:var(--text-sub);'>No items found.</p>";
       return;
     }
 
@@ -245,29 +345,23 @@
       const card = document.createElement("div");
       card.className = "item-card";
       
-      let imgTag = d.photo && d.photo !== "NO IMAGE" ? `<img src="${d.photo}" class="item-pic" alt="pic">` : `<div class="item-pic" style="display:flex; align-items:center; justify-content:center; color:var(--muted); height:40px;">NO IMAGE</div>`;
-      let stockAlertStatus = d.stock <= 0 ? "<span class='badge-alert'>SOLD OUT</span>" : d.stock <= 5 ? "<span class='badge-alert'>LOW</span>" : "OK";
+      let imgTag = d.photo && d.photo !== "NO IMAGE" ? `<img src="${d.photo}" class="item-pic" alt="pic">` : "";
+      let stockAlertStatus = d.stock <= 0 ? "<span class='badge-alert'>SOLD OUT</span>" : d.stock <= 5 ? "<span class='badge-alert'>LOW STOCK</span>" : "<span class='badge-ok'>AVAILABLE</span>";
 
       card.innerHTML = `
         ${imgTag}
-        <div class="flex-space"><strong>${d.item}</strong> <span>${stockAlertStatus}</span></div>
-        <div style="display:flex; gap:10px; margin: 10px 0;">
-          <div class="price-tag"><span style="color:var(--muted)">Retail:</span> <strong>${d.retail}</strong></div>
-          <div class="price-tag"><span style="color:var(--muted)">Wholesale:</span> <strong>${d.wholesale}</strong></div>
+        <div class="flex-space"><strong style="font-size:18px;">${d.item}</strong> <span>${stockAlertStatus}</span></div>
+        <div class="price-container">
+          <div class="price-tag"><span style="color:var(--text-sub)">Retail</span><br><strong style="color:var(--accent)">₹${d.retail}</strong></div>
+          <div class="price-tag"><span style="color:var(--text-sub)">Wholesale</span><br><strong style="color:var(--gold)">₹${d.wholesale}</strong></div>
         </div>
-        <div class="flex-space"><span style="color:var(--muted)">Stock Level:</span> <span>${d.stock}</span></div>
-        <div class="flex-space"><span style="color:var(--muted)">Items Sold:</span> <span>${d.sold}</span></div>
-        <div class="flex-space"><span style="color:var(--muted)">Sales Revenue:</span> <span>${d.sales}</span></div>
+        <div class="flex-space"><span style="color:var(--text-sub)">Remaining Stock:</span> <strong>${d.stock}</strong></div>
+        <div class="flex-space"><span style="color:var(--text-sub)">Units Sold:</span> <span>${d.sold}</span></div>
+        <div class="flex-space"><span style="color:var(--text-sub)">Item Revenue:</span> <span style="color:var(--success)">₹${d.sales}</span></div>
       `;
       container.appendChild(card);
     });
   }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    if(document.getElementById("main-screen").classList.contains("active")) {
-      fetchSheetData();
-    }
-  });
 
   function drawStats() {
     const alertBox = document.getElementById("alert-container");
@@ -276,35 +370,101 @@
     alertBox.innerHTML = "";
     topBox.innerHTML = "";
 
+    let calculatedStockValue = 0;
+    let calculatedTotalSales = 0;
+
+    localData.forEach(d => {
+      // Calculate sheet metrics
+      let rPrice = parseFloat(d.retail) || 0;
+      let sAmount = parseFloat(d.sales) || 0;
+      calculatedStockValue += (d.stock * rPrice);
+      calculatedTotalSales += sAmount;
+    });
+
+    // Write calculations to balance sheet
+    document.getElementById("total-stock-val").innerText = "₹" + calculatedStockValue.toFixed(2);
+    document.getElementById("total-sales-val").innerText = "₹" + calculatedTotalSales.toFixed(2);
+
     const lowStockItems = localData.filter(d => d.stock <= 5);
     if(lowStockItems.length === 0) {
-      alertBox.innerHTML = "<p style='color:var(--muted);'>All items secure in stock.</p>";
+      alertBox.innerHTML = "<p style='color:var(--success); margin:0;'>✓ All products safely stocked.</p>";
     } else {
       lowStockItems.forEach(d => {
-        alertBox.innerHTML += `<div class="flex-space" style="padding:4px 0;"><span>${d.item}</span> <span class="badge-alert">${d.stock} left</span></div>`;
+        alertBox.innerHTML += `<div class="flex-space"><span>${d.item}</span> <span class="badge-alert">${d.stock} left</span></div>`;
       });
     }
 
     const sortedData = [...localData].sort((x, y) => y.sold - x.sold);
     const topThree = sortedData.slice(0, 3);
     
+    let performanceCheck = false;
     topThree.forEach((d, idx) => {
       if(d.sold > 0) {
-        topBox.innerHTML += `<div class="flex-space" style="padding:4px 0;"><span>${idx+1}. ${d.item}</span> <strong>${d.sold} units sold</strong></div>`;
+        performanceCheck = true;
+        topBox.innerHTML += `<div class="flex-space"><span>${idx+1}. ${d.item}</span> <strong style="color:var(--accent)">${d.sold} sold</strong></div>`;
       }
     });
-    if(topBox.innerHTML === "") {
-      topBox.innerHTML = "<p style='color:var(--muted);'>No sales recorded yet.</p>";
+    if(!performanceCheck) {
+      topBox.innerHTML = "<p style='color:var(--text-sub); margin:0;'>No volume recorded.</p>";
     }
   }
 
-  function saveItemData() {
+  async function saveItemData() {
     const pName = document.getElementById("form-name").value;
+    const pStock = document.getElementById("form-stock").value || "0";
+    const pRetail = document.getElementById("form-retail").value || "0.00";
+    const pWholesale = document.getElementById("form-wholesale").value || "0.00";
+    const pSold = document.getElementById("form-sold").value || "0";
+    const pSales = document.getElementById("form-sales").value || "0.00";
+    const pPic = document.getElementById("form-pic").value || "NO IMAGE";
+
     if(!pName) {
       alert("Product Name mandatory!");
       return;
     }
-    alert("Data verified and ready to update!");
+
+    const statusMsg = document.getElementById("status-msg");
+    statusMsg.style.color = "var(--accent)";
+    statusMsg.innerText = "UPDATING DATABASE...";
+
+    const payload = {
+      item: pName,
+      stock: pStock,
+      retail: pRetail,
+      wholesale: pWholesale,
+      sold: pSold,
+      sales: pSales,
+      photo: pPic
+    };
+
+    try {
+      await fetch(WEB_APP_URL, {
+        method: "POST",
+        mode: "no-cors",
+        cache: "no-cache",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      statusMsg.style.color = "var(--success)";
+      statusMsg.innerText = "SUCCESSFULLY SAVED!";
+      
+      // Clear inputs
+      document.getElementById("form-name").value = "";
+      document.getElementById("form-stock").value = "";
+      document.getElementById("form-retail").value = "";
+      document.getElementById("form-wholesale").value = "";
+      document.getElementById("form-sold").value = "";
+      document.getElementById("form-sales").value = "";
+      document.getElementById("form-pic").value = "";
+
+      // Instantly load database so you can search immediately
+      await fetchSheetData();
+
+    } catch (error) {
+      statusMsg.style.color = "var(--alert)";
+      statusMsg.innerText = "SUBMIT ERROR. RETRY.";
+    }
   }
 </script>
 
