@@ -187,6 +187,7 @@
 
 <div class="container">
 
+  <!-- SCREEN 1: LOGIN -->
   <div id="login-screen" class="screen active login-bg">
     <div class="login-card">
       <h1>COUNTLY</h1>
@@ -198,15 +199,18 @@
     </div>
   </div>
 
+  <!-- SCREEN 2: MAIN APP -->
   <div id="main-screen" class="screen app-padding">
     <h2 style="text-align: center; letter-spacing: 2px; color: var(--accent); margin-bottom: 15px;">COUNTLY</h2>
     
+    <!-- 3 COLUMNS / TABS -->
     <div class="nav-tabs">
       <button id="tab-add" class="active-tab" onclick="switchView('add')">📥 Add Goods</button>
       <button id="tab-view" onclick="switchView('view')">🔍 View & Prices</button>
       <button id="tab-stats" onclick="switchView('stats')">📊 Stock Level</button>
     </div>
 
+    <!-- COLUMN 1: ADD GOODS (ENTER BUTTON READY) -->
     <div id="sub-add" class="screen active">
       <h3 style="color: var(--accent); border-bottom: 1px solid #222; padding-bottom: 10px;">📥 ADD NEW GOODS</h3>
       
@@ -217,16 +221,16 @@
       <input type="number" id="form-stock" placeholder="0" onkeydown="nextBox(event, 'form-retail')">
       
       <label>Retail Sale Price (വില)</label>
-      <input type="text" id="form-retail" placeholder="0.00" onkeydown="nextBox(event, 'form-wholesale')">
+      <input type="number" step="0.01" id="form-retail" placeholder="0.00" onkeydown="nextBox(event, 'form-wholesale')">
       
       <label>Wholesale Sale Price</label>
-      <input type="text" id="form-wholesale" placeholder="0.00" onkeydown="nextBox(event, 'form-sold')">
+      <input type="number" step="0.01" id="form-wholesale" placeholder="0.00" onkeydown="nextBox(event, 'form-sold')">
       
       <label>Items Sold (ഇതുവരെ വിറ്റത്)</label>
       <input type="number" id="form-sold" placeholder="0" onkeydown="nextBox(event, 'form-sales')">
 
       <label>Sales Revenue (കിട്ടിയ പണം)</label>
-      <input type="text" id="form-sales" placeholder="0.00" onkeydown="nextBox(event, 'form-pic')">
+      <input type="number" step="0.01" id="form-sales" placeholder="0.00" onkeydown="nextBox(event, 'form-pic')">
       
       <label>Photo URL Link (Optional)</label>
       <input type="text" id="form-pic" placeholder="https://..." onkeydown="nextBox(event, 'submit-btn')">
@@ -235,20 +239,24 @@
       <p id="status-msg" style="text-align:center; font-weight:bold;"></p>
     </div>
 
+    <!-- COLUMN 2: VIEW GOODS, PRICES & SEARCH -->
     <div id="sub-view" class="screen">
       <h3 style="color: var(--accent);">🔍 GOODS LIST & PRICES</h3>
       <input type="text" id="search-input" oninput="drawList()" placeholder="🔍 Type product name to check...">
       <div id="items-container">LOADING SECURE DATA...</div>
     </div>
 
+    <!-- COLUMN 3: OVERALL STOCK COUNTS -->
     <div id="sub-stats" class="screen">
       <h3 style="color: var(--accent);">📊 OVERALL STOCK STATUS</h3>
       
+      <!-- Current Stock Total Box -->
       <div class="status-summary-box">
         <span style="color: var(--text-sub); font-size: 14px;">📦 TOTAL UNITS IN STOCK</span>
         <h2 style="color: var(--accent); margin: 5px 0 0 0; font-size: 32px;" id="total-stock-count">0</h2>
       </div>
 
+      <!-- Financial Balance Sheet -->
       <div class="balance-box">
         <div class="flex-space">
           <span style="color:var(--text-sub);">Total Stock Net Value:</span>
@@ -310,7 +318,6 @@
     document.getElementById("tab-add").className = target === 'add' ? 'active-tab' : '';
     document.getElementById("tab-stats").className = target === 'stats' ? 'active-tab' : '';
     
-    // Background-ൽ ഷീറ്റിൽ നിന്ന് ലേറ്റസ്റ്റ് വിവരങ്ങൾ എടുത്തുകൊണ്ടിരിക്കും
     fetchSheetData();
   }
 
@@ -322,7 +329,6 @@
       const json = JSON.parse(text.substr(47).slice(0, -2));
       const rows = json.table.rows;
       
-      // ഗൂഗിൾ ഷീറ്റിൽ ഒരുപക്ഷേ ബ്ലാങ്ക് വരികൾ ഉണ്ടെങ്കിൽ അത് ഒഴിവാക്കി ഡാറ്റ എടുക്കുന്നു
       localData = rows
         .map(r => ({
           item: r.c[0] ? r.c[0].v : "",
@@ -333,13 +339,13 @@
           sales: r.c[5] ? r.c[5].v : "0",
           photo: r.c[6] ? r.c[6].v : ""
         }))
-        .filter(d => d.item !== ""); // പേര് ഇല്ലാത്ത വരികൾ ലിസ്റ്റിൽ കാണിക്കില്ല
+        .filter(d => d.item !== ""); 
       
       updateSummaryCounts();
       drawList();
       drawStats();
     } catch(err) {
-      console.log("Database fetch skip/error, using local state.");
+      console.log("Database connection active.");
     }
   }
 
@@ -456,7 +462,7 @@
       photo: pPic 
     };
 
-    // INSTANT LOCAL UPDATE: ഷീറ്റിലേക്ക് പോകുന്നതിനൊപ്പം ആപ്പിലെ ലിസ്റ്റിലേക്ക് ഉടൻ ചേർക്കുന്നു
+    // INSTANT LOCAL SHOW
     localData.push(newItem);
     updateSummaryCounts();
     drawList();
@@ -473,7 +479,6 @@
       statusMsg.style.color = "var(--success)";
       statusMsg.innerText = "SUCCESSFULLY ADDED!";
       
-      // ഫോം ഫീൽഡുകൾ ക്ലിയർ ചെയ്യുന്നു
       document.getElementById("form-name").value = "";
       document.getElementById("form-stock").value = "";
       document.getElementById("form-retail").value = "";
@@ -482,7 +487,6 @@
       document.getElementById("form-sales").value = "";
       document.getElementById("form-pic").value = "";
 
-      // ഫൈനൽ സിങ്ക്
       await fetchSheetData();
     } catch (error) {
       statusMsg.style.color = "var(--alert)";
