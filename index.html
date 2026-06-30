@@ -123,6 +123,16 @@
       border: none;
     }
 
+    /* STOCK STATUS SUMMARY BOX */
+    .status-summary-box {
+      background: linear-gradient(135deg, #1f1f26 0%, #141419 100%);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid #2c2c35;
+      text-align: center;
+    }
+
     /* CARDS DESIGN */
     .item-card {
       background: var(--card);
@@ -177,7 +187,7 @@
 
 <div class="container">
 
-  <!-- SCREEN 1: LOGIN (WITH ATTRACTIVE BACKGROUND) -->
+  <!-- SCREEN 1: LOGIN -->
   <div id="login-screen" class="screen active login-bg">
     <div class="login-card">
       <h1>COUNTLY</h1>
@@ -201,6 +211,12 @@
 
     <!-- VIEW & SEARCH STOCKS -->
     <div id="sub-view">
+      <!-- NEW CURRENT STOCK TOTAL BOX -->
+      <div class="status-summary-box">
+        <span style="color: var(--text-sub); font-size: 14px;">📦 TOTAL ITEMS IN STOCK</span>
+        <h2 style="color: var(--accent); margin: 5px 0 0 0; font-size: 28px;" id="total-stock-count">0</h2>
+      </div>
+
       <input type="text" id="search-input" oninput="drawList()" placeholder="🔍 Type item name to search...">
       <div id="items-container">LOADING SECURE DATA...</div>
     </div>
@@ -237,7 +253,7 @@
     <!-- METRICS & BALANCE SHEET -->
     <div id="sub-stats" class="screen">
       
-      <!-- NEW BALANCE SHEET BLOCK -->
+      <!-- BALANCE SHEET BLOCK -->
       <h3 style="color: var(--accent);">📊 BALANCE SHEET</h3>
       <div class="balance-box">
         <div class="flex-space">
@@ -300,7 +316,6 @@
     document.getElementById("tab-add").className = target === 'add' ? 'active-tab' : '';
     document.getElementById("tab-stats").className = target === 'stats' ? 'active-tab' : '';
     
-    // Always fetch latest data when checking view or stats
     fetchSheetData();
   }
 
@@ -322,11 +337,21 @@
         photo: r.c[6] ? r.c[6].v : ""
       }));
       
+      calculateTotalStock();
       drawList();
       drawStats();
     } catch(err) {
       document.getElementById("items-container").innerText = "Error refreshing database.";
     }
+  }
+
+  // FUNCTION TO CALCULATE TOTAL STOCK FOR THE NEW BOX
+  function calculateTotalStock() {
+    let grandStock = 0;
+    localData.forEach(d => {
+      grandStock += d.stock;
+    });
+    document.getElementById("total-stock-count").innerText = grandStock;
   }
 
   function drawList() {
@@ -374,14 +399,12 @@
     let calculatedTotalSales = 0;
 
     localData.forEach(d => {
-      // Calculate sheet metrics
       let rPrice = parseFloat(d.retail) || 0;
       let sAmount = parseFloat(d.sales) || 0;
       calculatedStockValue += (d.stock * rPrice);
       calculatedTotalSales += sAmount;
     });
 
-    // Write calculations to balance sheet
     document.getElementById("total-stock-val").innerText = "₹" + calculatedStockValue.toFixed(2);
     document.getElementById("total-sales-val").innerText = "₹" + calculatedTotalSales.toFixed(2);
 
@@ -449,7 +472,6 @@
       statusMsg.style.color = "var(--success)";
       statusMsg.innerText = "SUCCESSFULLY SAVED!";
       
-      // Clear inputs
       document.getElementById("form-name").value = "";
       document.getElementById("form-stock").value = "";
       document.getElementById("form-retail").value = "";
@@ -458,7 +480,6 @@
       document.getElementById("form-sales").value = "";
       document.getElementById("form-pic").value = "";
 
-      // Instantly load database so you can search immediately
       await fetchSheetData();
 
     } catch (error) {
