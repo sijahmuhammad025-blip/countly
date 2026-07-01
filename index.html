@@ -1,499 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Countly Premium Business</title>
-  <style>
-    :root {
-      --bg: #0f0f11;
-      --card: #18181c;
-      --accent: #00f5d4;
-      --text-main: #f1f3f5;
-      --text-sub: #adb5bd;
-      --alert: #ff5a5f;
-      --success: #38b000;
-      --gold: #fee440;
-    }
-    body {
-      background: var(--bg);
-      color: var(--text-main);
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 480px;
-      margin: 0 auto;
-      min-height: 100vh;
-      box-sizing: border-box;
-    }
-    
-    /* LOGIN BACKGROUND */
-    .login-bg {
-      background: linear-gradient(135deg, #1e1e24 0%, #0f0f11 100%);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 30px;
-      min-height: 100vh;
-      box-sizing: border-box;
-    }
-    .login-card {
-      background: rgba(24, 24, 28, 0.8);
-      padding: 30px 24px;
-      border-radius: 16px;
-      border: 1px solid #2c2c35;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(10px);
-      text-align: center;
-    }
-    .login-card h1 {
-      font-size: 32px;
-      letter-spacing: 3px;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-
-    .screen { display: none; }
-    .active { display: block; }
-    
-    .app-padding {
-      padding: 20px 16px;
-    }
-    
-    h2, h3, h4 {
-      color: var(--text-main);
-      margin-top: 0;
-    }
-    label {
-      font-size: 13px;
-      color: var(--accent);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    input, button {
-      width: 100%;
-      padding: 14px;
-      margin: 8px 0 18px 0;
-      border-radius: 10px;
-      border: 1px solid #2a2a32;
-      background: #1f1f24;
-      color: #fff;
-      box-sizing: border-box;
-      font-size: 16px;
-      transition: all 0.3s;
-    }
-    input:focus {
-      border-color: var(--accent);
-      outline: none;
-      background: #25252b;
-    }
-    button {
-      background: linear-gradient(90deg, #00b4d8, #00f5d4);
-      color: #0f0f11;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      letter-spacing: 1px;
-    }
-    button:active {
-      transform: scale(0.98);
-    }
-    
-    /* 3-TAB SYSTEM */
-    .nav-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-    .nav-tabs button {
-      margin: 0;
-      padding: 12px 6px;
-      font-size: 12px;
-      font-weight: bold;
-      background: #18181c;
-      color: var(--text-sub);
-      border: 1px solid #252529;
-      text-transform: uppercase;
-    }
-    .nav-tabs button.active-tab {
-      background: linear-gradient(90deg, #00b4d8, #00f5d4);
-      color: #0f0f11;
-      border: none;
-    }
-
-    /* SUMMARY COUNTER */
-    .status-summary-box {
-      background: linear-gradient(135deg, #1f1f26 0%, #141419 100%);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 20px;
-      border: 1px solid #2c2c35;
-      text-align: center;
-    }
-
-    /* CARDS DESIGN */
-    .item-card {
-      background: var(--card);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 16px;
-      border: 1px solid #23232a;
-    }
-    .item-pic {
-      width: 100%;
-      max-height: 180px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 14px;
-      background: #222;
-    }
-    .flex-space {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 8px 0;
-    }
-    .price-container {
-      display: flex;
-      gap: 8px;
-      margin: 12px 0;
-    }
-    .price-tag {
-      flex: 1;
-      background: #202026;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      border: 1px solid #2c2c35;
-    }
-    
-    .balance-box {
-      background: linear-gradient(135deg, #1d3557 0%, #18181c 100%);
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 24px;
-      border: 1px solid #457b9d;
-    }
-
-    .badge-alert { color: var(--alert); font-weight: bold; }
-    .badge-ok { color: var(--success); font-weight: bold; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countly Business Manager</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background-color: #f1f5f9;
+        }
+        .search-box {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>Countly Business Manager</h1>
+        </header>
 
-<div class="container">
-
-  <!-- SCREEN 1: LOGIN -->
-  <div id="login-screen" class="screen active login-bg">
-    <div class="login-card">
-      <h1>COUNTLY</h1>
-      <p style="color: var(--text-sub); font-size:14px; margin-top:0; margin-bottom:25px;">BUSINESS MANAGER</p>
-      <label>Enter Security Code</label>
-      <input type="password" id="pass-input" placeholder="••••••" style="text-align: center; font-size: 20px; letter-spacing: 4px;" onkeydown="loginEnter(event)">
-      <button onclick="checkPass()">ACCESS ACCOUNT</button>
-      <p id="login-error" style="color:var(--alert); font-weight:bold; margin-top:10px;"></p>
-    </div>
-  </div>
-
-  <!-- SCREEN 2: MAIN APP -->
-  <div id="main-screen" class="screen app-padding">
-    <h2 style="text-align: center; letter-spacing: 2px; color: var(--accent); margin-bottom: 15px;">COUNTLY</h2>
-    
-    <!-- 3 COLUMNS / TABS -->
-    <div class="nav-tabs">
-      <button id="tab-add" class="active-tab" onclick="switchView('add')">📥 Add Goods</button>
-      <button id="tab-view" onclick="switchView('view')">🔍 View & Prices</button>
-      <button id="tab-stats" onclick="switchView('stats')">📊 Stock Level</button>
-    </div>
-
-    <!-- COLUMN 1: ADD GOODS (ENTER BUTTON READY) -->
-    <div id="sub-add" class="screen active">
-      <h3 style="color: var(--accent); border-bottom: 1px solid #222; padding-bottom: 10px;">📥 ADD NEW GOODS</h3>
-      
-      <label>Product Name</label>
-      <input type="text" id="form-name" placeholder="Item Name" onkeydown="nextBox(event, 'form-stock')">
-      
-      <label>Stock Count (ആകെ എണ്ണം)</label>
-      <input type="number" id="form-stock" placeholder="0" onkeydown="nextBox(event, 'form-retail')">
-      
-      <label>Retail Sale Price (വില)</label>
-      <input type="number" step="0.01" id="form-retail" placeholder="0.00" onkeydown="nextBox(event, 'form-wholesale')">
-      
-      <label>Wholesale Sale Price</label>
-      <input type="number" step="0.01" id="form-wholesale" placeholder="0.00" onkeydown="nextBox(event, 'form-sold')">
-      
-      <label>Items Sold (ഇതുവരെ വിറ്റത്)</label>
-      <input type="number" id="form-sold" placeholder="0" onkeydown="nextBox(event, 'form-sales')">
-
-      <label>Sales Revenue (കിട്ടിയ പണം)</label>
-      <input type="number" step="0.01" id="form-sales" placeholder="0.00" onkeydown="nextBox(event, 'form-pic')">
-      
-      <label>Photo URL Link (Optional)</label>
-      <input type="text" id="form-pic" placeholder="https://..." onkeydown="nextBox(event, 'submit-btn')">
-      
-      <button id="submit-btn" onclick="saveItemData()">SAVE TO SPREADSHEET</button>
-      <p id="status-msg" style="text-align:center; font-weight:bold;"></p>
-    </div>
-
-    <!-- COLUMN 2: VIEW GOODS, PRICES & SEARCH -->
-    <div id="sub-view" class="screen">
-      <h3 style="color: var(--accent);">🔍 GOODS LIST & PRICES</h3>
-      <input type="text" id="search-input" oninput="drawList()" placeholder="🔍 Type product name to check...">
-      <div id="items-container">LOADING SECURE DATA...</div>
-    </div>
-
-    <!-- COLUMN 3: OVERALL STOCK COUNTS -->
-    <div id="sub-stats" class="screen">
-      <h3 style="color: var(--accent);">📊 OVERALL STOCK STATUS</h3>
-      
-      <!-- Current Stock Total Box -->
-      <div class="status-summary-box">
-        <span style="color: var(--text-sub); font-size: 14px;">📦 TOTAL UNITS IN STOCK</span>
-        <h2 style="color: var(--accent); margin: 5px 0 0 0; font-size: 32px;" id="total-stock-count">0</h2>
-      </div>
-
-      <!-- Financial Balance Sheet -->
-      <div class="balance-box">
-        <div class="flex-space">
-          <span style="color:var(--text-sub);">Total Stock Net Value:</span>
-          <strong style="color:var(--gold); font-size:18px;" id="total-stock-val">₹0.00</strong>
+        <div class="card">
+            <h2>Add New Product</h2>
+            <form id="productForm">
+                <div class="form-group">
+                    <label for="itemName">Item Name</label>
+                    <input type="text" id="itemName" required>
+                </div>
+                <div class="form-group">
+                    <label for="stock">Stock Count</label>
+                    <input type="number" id="stock" required>
+                </div>
+                <div class="form-group">
+                    <label for="retail">Retail Price</label>
+                    <input type="number" id="retail" required>
+                </div>
+                <div class="form-group">
+                    <label for="wholesale">Wholesale Price</label>
+                    <input type="number" id="wholesale" required>
+                </div>
+                <div class="form-group">
+                    <label for="photo">Photo URL (Optional)</label>
+                    <input type="text" id="photo">
+                </div>
+                <button type="submit">Save Product</button>
+            </form>
         </div>
-        <div class="flex-space">
-          <span style="color:var(--text-sub);">Total Sales Revenue:</span>
-          <strong style="color:var(--accent); font-size:18px;" id="total-sales-val">₹0.00</strong>
-        </div>
-      </div>
 
-      <h3 style="color: var(--alert);">⚠️ LOW STOCK ALERTS</h3>
-      <div id="alert-container" class="item-card"></div>
-      
-      <h3 style="color: var(--success);">🏆 TOP SELLING</h3>
-      <div id="top-container" class="item-card"></div>
+        <div class="card">
+            <h2>Inventory & Search</h2>
+            <input type="text" id="searchBox" class="search-box" placeholder="Search items...">
+            <table id="inventoryTable">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Stock</th>
+                        <th>Retail Price</th>
+                        <th>Wholesale Price</th>
+                        <th>Sold</th>
+                        <th>Sales</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryBody">
+                    </tbody>
+            </table>
+        </div>
     </div>
 
-  </div>
+    <script>
+        // 1. നിങ്ങളുടെ സ്വന്തം ID-കൾ (ഇവിടെയാണ് ലിങ്കുകൾ മാറ്റേണ്ടത്)
+        const SPREADSHEET_ID = "1nKQifHiFVllWgxToxFhqflcHpwCa0PQEdJP6WkK2YT8"; 
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyLsJ6EzK3oqlFg0pynBXfYDi-gr9_mIiv9maTgyYfY7F_ugW6XQ3C0p0Sit_3yAMK5Aw/exec"; 
 
-</div>
+        // 2. പേജ് ലോഡ് ചെയ്യുമ്പോൾ ഗൂഗിൾ ഷീറ്റിൽ നിന്നും ഡാറ്റ എടുക്കാനുള്ള കോഡ്
+        async function loadInventory() {
+            const tbody = document.getElementById('inventoryBody');
+            tbody.innerHTML = '<tr><td colspan="6">Loading data...</td></tr>';
+            
+            try {
+                const response = await fetch(`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json`);
+                const text = await response.text();
+                const json = JSON.parse(text.substr(47).slice(0, -2));
+                const rows = json.table.rows;
+                
+                tbody.innerHTML = '';
+                
+                rows.forEach((row, index) => {
+                    if (index === 0) return; // ഹെഡ്ഡർ ഒഴിവാക്കാൻ
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${row.c[0] ? row.c[0].v : ''}</td>
+                        <td>${row.c[1] ? row.c[1].v : 0}</td>
+                        <td>${row.c[2] ? row.c[2].v : 0}</td>
+                        <td>${row.c[3] ? row.c[3].v : 0}</td>
+                        <td>${row.c[4] ? row.c[4].v : 0}</td>
+                        <td>${row.c[5] ? row.c[5].v : 0}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                tbody.innerHTML = '<tr><td colspan="6">Error loading data. Make sure sheet is shared properly.</td></tr>';
+            }
+        }
 
-<script>
-  // ശ്രദ്ധിക്കുക: ഇവിടെ നിങ്ങളുടെ സ്വന്തം ID-കൾ നൽകാൻ മറക്കരുത്!
-  const SPREADSHEET_ID = "1nKQifHiFVllWgxToxFhqflcHpwCa0PQEdJP6WkK2YT8"; 
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzntlqsrWAwpnFr1GZCRhyCVc-J3wy4fDvkc8TYKGz36yoGBAj1YYKgm9i5CVxuNe0DwA/exec"; 
+        // 3. വെബ്‌സൈറ്റിൽ നിന്നും ഗൂഗിൾ ഷീറ്റിലേക്ക് ഡാറ്റ അയക്കാനുള്ള കോഡ്
+        document.getElementById('productForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitButton = e.target.querySelector('button');
+            submitButton.innerText = 'Saving...';
+            submitButton.disabled = true;
 
-  let localData = [];
+            const productData = {
+                item: document.getElementById('itemName').value,
+                stock: Number(document.getElementById('stock').value),
+                retail: Number(document.getElementById('retail').value),
+                wholesale: Number(document.getElementById('wholesale').value),
+                sold: 0,
+                sales: 0,
+                photo: document.getElementById('photo').value || ''
+            };
 
-  function nextBox(event, nextId) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      const target = document.getElementById(nextId);
-      if (target) target.focus();
-    }
-  }
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // CORS പ്രശ്നം ഒഴിവാക്കാൻ
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productData)
+                });
 
-  function loginEnter(event) {
-    if (event.key === "Enter") checkPass();
-  }
+                alert('SAVED SUCCESSFULLY');
+                document.getElementById('productForm').reset();
+                setTimeout(loadInventory, 2000); // 2 സെക്കന്റ് കഴിഞ്ഞ് ലിസ്റ്റ് പുതുക്കുക
+            } catch (error) {
+                console.error('Error saving:', error);
+                alert('Error saving data!');
+            } finally {
+                submitButton.innerText = 'Save Product';
+                submitButton.disabled = false;
+            }
+        });
 
-  function checkPass() {
-    const code = document.getElementById("pass-input").value;
-    if(code === "965610") {
-      document.getElementById("login-screen").classList.remove("active");
-      document.getElementById("main-screen").classList.add("active");
-      fetchSheetData();
-    } else {
-      document.getElementById("login-error").innerText = "INVALID CODE. ACCESS DENIED.";
-    }
-  }
+        // 4. വെബ്‌സൈറ്റിലെ സെർച്ച് ഓപ്ഷൻ
+        document.getElementById('searchBox').addEventListener('keyup', function(e) {
+            const term = e.target.value.toLowerCase();
+            const rows = document.getElementById('inventoryBody').getElementsByTagName('tr');
+            
+            Array.from(rows).forEach(row => {
+                const itemName = row.getElementsByTagName('td')[0]?.innerText.toLowerCase() || '';
+                if(itemName.includes(term)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
 
-  function switchView(target) {
-    document.getElementById("sub-view").style.display = target === 'view' ? 'block' : 'none';
-    document.getElementById("sub-add").style.display = target === 'add' ? 'block' : 'none';
-    document.getElementById("sub-stats").style.display = target === 'stats' ? 'block' : 'none';
-    
-    document.getElementById("tab-view").className = target === 'view' ? 'active-tab' : '';
-    document.getElementById("tab-add").className = target === 'add' ? 'active-tab' : '';
-    document.getElementById("tab-stats").className = target === 'stats' ? 'active-tab' : '';
-    
-    fetchSheetData();
-  }
-
-  async function fetchSheetData() {
-    try {
-      const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json`;
-      const res = await fetch(url);
-      const text = await res.text();
-      const json = JSON.parse(text.substr(47).slice(0, -2));
-      const rows = json.table.rows;
-      
-      localData = rows
-        .map(r => ({
-          item: r.c[0] ? r.c[0].v : "",
-          stock: r.c[1] ? Number(r.c[1].v) : 0,
-          retail: r.c[2] ? r.c[2].v : "0",
-          wholesale: r.c[3] ? r.c[3].v : "0",
-          sold: r.c[4] ? Number(r.c[4].v) : 0,
-          sales: r.c[5] ? r.c[5].v : "0",
-          photo: r.c[6] ? r.c[6].v : ""
-        }))
-        .filter(d => d.item !== ""); 
-      
-      updateSummaryCounts();
-      drawList();
-      drawStats();
-    } catch(err) {
-      console.log("Database connection active.");
-    }
-  }
-
-  function updateSummaryCounts() {
-    let grandStock = 0;
-    localData.forEach(d => { grandStock += d.stock; });
-    document.getElementById("total-stock-count").innerText = grandStock;
-  }
-
-  function drawList() {
-    const term = document.getElementById("search-input").value.toLowerCase();
-    const container = document.getElementById("items-container");
-    container.innerHTML = "";
-    
-    const filtered = localData.filter(d => d.item.toLowerCase().includes(term));
-    
-    if(filtered.length === 0) {
-      container.innerHTML = "<p style='text-align:center; color:var(--text-sub);'>No items found.</p>";
-      return;
-    }
-
-    filtered.forEach(d => {
-      const card = document.createElement("div");
-      card.className = "item-card";
-      
-      let imgTag = d.photo && d.photo !== "NO IMAGE" ? `<img src="${d.photo}" class="item-pic" alt="pic">` : "";
-      let stockAlertStatus = d.stock <= 0 ? "<span class='badge-alert'>SOLD OUT</span>" : d.stock <= 5 ? "<span class='badge-alert'>LOW STOCK</span>" : "<span class='badge-ok'>IN STOCK</span>";
-
-      card.innerHTML = `
-        ${imgTag}
-        <div class="flex-space"><strong style="font-size:18px; color:var(--accent);">${d.item}</strong> <span>${stockAlertStatus}</span></div>
-        <div class="price-container">
-          <div class="price-tag"><span style="color:var(--text-sub)">Retail Price</span><br><strong style="color:var(--text-main)">₹${d.retail}</strong></div>
-          <div class="price-tag"><span style="color:var(--text-sub)">Wholesale Price</span><br><strong style="color:var(--gold)">₹${d.wholesale}</strong></div>
-        </div>
-        <div class="flex-space"><span style="color:var(--text-sub)">Remaining Balance Stock:</span> <strong style="font-size:16px;">${d.stock} units</strong></div>
-        <div class="flex-space"><span style="color:var(--text-sub)">Total Sold Volume:</span> <span>${d.sold}</span></div>
-      `;
-      container.appendChild(card);
-    });
-  }
-
-  function drawStats() {
-    const alertBox = document.getElementById("alert-container");
-    const topBox = document.getElementById("top-container");
-    
-    if(!alertBox || !topBox) return;
-    
-    alertBox.innerHTML = "";
-    topBox.innerHTML = "";
-
-    let calculatedStockValue = 0;
-    let calculatedTotalSales = 0;
-
-    localData.forEach(d => {
-      let rPrice = parseFloat(d.retail) || 0;
-      let sAmount = parseFloat(d.sales) || 0;
-      calculatedStockValue += (d.stock * rPrice);
-      calculatedTotalSales += sAmount;
-    });
-
-    document.getElementById("total-stock-val").innerText = "₹" + calculatedStockValue.toFixed(2);
-    document.getElementById("total-sales-val").innerText = "₹" + calculatedTotalSales.toFixed(2);
-
-    const lowStockItems = localData.filter(d => d.stock <= 5);
-    if(lowStockItems.length === 0) {
-      alertBox.innerHTML = "<p style='color:var(--success); margin:0;'>✓ All products safely stocked.</p>";
-    } else {
-      lowStockItems.forEach(d => {
-        alertBox.innerHTML += `<div class="flex-space"><span>${d.item}</span> <span class="badge-alert">${d.stock} left</span></div>`;
-      });
-    }
-
-    const sortedData = [...localData].sort((x, y) => y.sold - x.sold);
-    const topThree = sortedData.slice(0, 3);
-    
-    let performanceCheck = false;
-    topThree.forEach((d, idx) => {
-      if(d.sold > 0) {
-        performanceCheck = true;
-        topBox.innerHTML += `<div class="flex-space"><span>${idx+1}. ${d.item}</span> <strong style="color:var(--accent)">${d.sold} sold</strong></div>`;
-      }
-    });
-    if(!performanceCheck) {
-      topBox.innerHTML = "<p style='color:var(--text-sub); margin:0;'>No volume recorded.</p>";
-    }
-  }
-
-  async function saveItemData() {
-    const pName = document.getElementById("form-name").value.trim();
-    const pStock = document.getElementById("form-stock").value || "0";
-    const pRetail = document.getElementById("form-retail").value || "0.00";
-    const pWholesale = document.getElementById("form-wholesale").value || "0.00";
-    const pSold = document.getElementById("form-sold").value || "0";
-    const pSales = document.getElementById("form-sales").value || "0.00";
-    const pPic = document.getElementById("form-pic").value || "NO IMAGE";
-
-    if(!pName) {
-      alert("Product Name mandatory!");
-      return;
-    }
-
-    const statusMsg = document.getElementById("status-msg");
-    statusMsg.style.color = "var(--accent)";
-    statusMsg.innerText = "SAVING GOODS TO SPREADSHEET...";
-
-    const newItem = { 
-      item: pName, 
-      stock: Number(pStock), 
-      retail: pRetail, 
-      wholesale: pWholesale, 
-      sold: Number(pSold), 
-      sales: pSales, 
-      photo: pPic 
-    };
-
-    // INSTANT LOCAL SHOW
-    localData.push(newItem);
-    updateSummaryCounts();
-    drawList();
-
-    try {
-      await fetch(WEB_APP_URL, {
-        method: "POST",
-        mode: "no-cors",
-        cache: "no-cache",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newItem)
-      });
-
-      statusMsg.style.color = "var(--success)";
-      statusMsg.innerText = "SUCCESSFULLY ADDED!";
-      
-      document.getElementById("form-name").value = "";
-      document.getElementById("form-stock").value = "";
-      document.getElementById("form-retail").value = "";
-      document.getElementById("form-wholesale").value = "";
-      document.getElementById("form-sold").value = "";
-      document.getElementById("form-sales").value = "";
-      document.getElementById("form-pic").value = "";
-
-      await fetchSheetData();
-    } catch (error) {
-      statusMsg.style.color = "var(--alert)";
-      statusMsg.innerText = "ERROR SAVING. DATA HELD LOCALLY.";
-    }
-  }
-</script>
-
+        // പേജ് ആദ്യമായി തുറക്കുമ്പോൾ ഡാറ്റ ലോഡ് ചെയ്യുക
+        window.onload = loadInventory;
+    </script>
 </body>
 </html>
